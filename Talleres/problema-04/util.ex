@@ -26,19 +26,56 @@ defmodule Util do
     |> String.trim()
   end
 
-  def ingresar(mensaje, :entero) do
+  @doc """
+  versión sin función de alto orden
+  """
+  # def ingresar(mensaje, :entero) do
+  #   try do
+  #     mensaje
+  #     |> ingresar(:texto)
+  #     |> String.to_integer()
+  #   rescue
+  #     ArgumentError ->
+  #       "Error, se espera que ingrese un número entero\n"
+  #       |> mostrar_error()
+
+  #     mensaje
+  #     |> ingresar(:entero)
+  #   end
+  # end
+
+  # def ingresar(mensaje, :real) do
+  #   try do
+  #     mensaje
+  #     |> ingresar(:texto)
+  #     |> String.to_float()
+  #   rescue
+  #     ArgumentError ->
+  #       "Error, se espera que ingrese un número real\n"
+  #       |> mostrar_error()
+
+  #       mensaje
+  #       |> ingresar(:real)
+  #   end
+  # end
+
+  defp ingresar(mensaje, parser, tipo_dato) do
     try do
       mensaje
       |> ingresar(:texto)
-      |> String.to_integer()
-      rescue
+      |> parser.()
+    rescue
       ArgumentError ->
-      "Error, se espera que ingrese un número entero\n"
+      "Error, se espera que ingrese un número #{tipo_dato}\n"
       |> mostrar_error()
       mensaje
-      |> ingresar(:entero)
+      |> ingresar(parser, tipo_dato)
+      end
     end
-  end
+
+    def ingresar(mensaje, :entero), do: ingresar(mensaje, &String.to_integer/1, :entero)
+    def ingresar(mensaje, :real), do: ingresar(mensaje, &String.to_float/1, :real)
+
 
   @doc """
   Función entrada de cadena con GUI
