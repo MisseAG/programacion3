@@ -23,9 +23,9 @@ defmodule ValidacionAcceso do
   """
   def main do
     "Ingrese el nombre de usuario: "
-    |> ingresar(:texto)
+    |> Util.ingresar(:texto)
     edad_usuario = "Ingrese la edad: "
-    |> ingresar(:entero)
+    |> Util.ingresar(:entero)
     credenciales = "Ingrese las credenciales: (s/n)"
     |> ingresar_booleano()
 
@@ -33,42 +33,22 @@ defmodule ValidacionAcceso do
 
     evaluar_validez(edad_usuario, credenciales, numero_intentos)
     |> generar_mensaje()
-    |> mostrar_mensaje()
+    |> Util.mostrar_mensaje()
   end
 
   defp ingresar_booleano(mensaje) do
     mensaje
-    |> ingresar(:texto)
+    |> Util.ingresar(:texto)
     |> String.downcase()
     |> case do
         "s" -> true
         "n" -> false
         _ ->
           "Error, se espera que ingrese 's' o 'n'\n"
-          |> mostrar_error()
+          |> Util.mostrar_error()
           mensaje
           |> ingresar_booleano()
       end
-  end
-
-  defp ingresar(mensaje, :texto) do
-    mensaje
-    |> IO.gets()
-    |> String.trim()
-  end
-
-  defp ingresar(mensaje, :entero) do
-    try do
-      mensaje
-      |> ingresar(:texto)
-      |> String.to_integer()
-    rescue
-      ArgumentError ->
-       "Error, se espera que ingrese un número entero\n"
-       |> mostrar_error()
-       mensaje
-       |> ingresar(:entero)
-   end
   end
 
   defp evaluar_validez(edad_usuario, credenciales, numero_intentos) do
@@ -117,15 +97,6 @@ defmodule ValidacionAcceso do
     {_, _, {:error, _}} ->
       "Acceso Denegado - Cuenta bloqueada por múltiples intentos fallidos"
    end
-  end
-
-  defp mostrar_mensaje(mensaje) do
-    mensaje
-    |>IO.puts()
-  end
-
-  defp mostrar_error(mensaje) do
-    IO.puts(:standard_error, mensaje)
   end
 end
 
