@@ -105,11 +105,18 @@ defmodule ValidacionAcceso do
 
   defp generar_mensaje({resultado_edad, resultado_credenciales, resultado_intentos}) do
     case {resultado_edad, resultado_credenciales, resultado_intentos} do
-      {:ok, :ok, :ok} -> "Acceso Concedido"
-      {:error, _, _} -> "Acceso Denegado - Restricción de edad"
-      {_, {:error, _}, _} -> "Acceso Denegado - Credenciales inválidas"
-      {_, _, {:error, _}} -> "Acceso Denegado - Cuenta bloqueada por múltiples intentos fallidos"
-    end
+    {:ok, :ok, :ok} ->
+      "Acceso Concedido"
+
+    {{:error, _}, _, _} ->
+      "Acceso Denegado - Restricción de edad"
+
+    {_, {:error, _}, _} ->
+      "Acceso Denegado - Credenciales inválidas"
+
+    {_, _, {:error, _}} ->
+      "Acceso Denegado - Cuenta bloqueada por múltiples intentos fallidos"
+   end
   end
 
   defp mostrar_mensaje(mensaje) do
