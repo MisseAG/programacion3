@@ -68,7 +68,7 @@ defmodule ValidacionAcceso do
   end
 
   defp evaluar_credenciales(credenciales) do
-    if credenciales == true do
+    if credenciales do
       :ok
     else
       {:error, "credenciales inválidas"}

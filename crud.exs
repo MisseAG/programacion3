@@ -1,8 +1,7 @@
-#crud.exs
+# crud.exs
 numeros = [1, 2, 3, 4, 2]
 
 defmodule CRUD do
-
   @doc """
   Agrega un número a la lista.
   """
@@ -18,13 +17,27 @@ defmodule CRUD do
   end
 
   @doc """
+  Recorrer
+  """
+  def algo_number(list) do
+    Enum.each(list, fn x -> x end)
+  end
+
+  @doc """
+  Encontrar según condición
+  """
+  def find_number(list, condition) do
+    Enum.find(list, condition)
+  end
+
+  @doc """
   Elimina un número de la lista por su índice.
   """
   def delete_number(list, index) do
     List.delete_at(list, index)
   end
 
-  @doc"""
+  @doc """
   Elimina la primera aparición de un número específico en la lista.
   """
   def delete_first_number(list, number) do
@@ -38,7 +51,6 @@ defmodule CRUD do
     List.replace_at(list, index, new_number)
   end
 
-
   # @doc """
   # Muestra la lista
   # """
@@ -46,10 +58,9 @@ defmodule CRUD do
   #   IO.inspect(list)
   #   list
   # end
-
 end
 
-#uso
+# uso
 
 numeros
 |> tap(&IO.inspect(&1, label: "Inicial"))
