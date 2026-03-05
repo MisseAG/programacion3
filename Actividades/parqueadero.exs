@@ -15,7 +15,7 @@ defmodule SistemaParqueadero do
     |> calcular_tarifa()
     |> aplicar_descuentos(es_cliente_frecuente, es_vehiculo_electrico, es_finde) #retorna tupla con tarifa y tarifa con dcto
     |> generar_factura()
-    |> Util.mostrar_mensaje
+    |> Util.mostrar_mensaje()
   end
 
   defp calcular_tarifa(horas) when horas <= 2, do: 3000 #primeras dos horas 3000

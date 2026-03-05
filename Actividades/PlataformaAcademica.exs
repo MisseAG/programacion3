@@ -10,7 +10,7 @@ defmodule ValidarNombreUsuario do
     |> Util.mostrar_mensaje()
   end
 
-
+  
   #Función retorna una tupla con los resultados de cada validación
 
   defp validar_usuario(nombre) do
