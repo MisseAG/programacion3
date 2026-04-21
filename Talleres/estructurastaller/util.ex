@@ -26,18 +26,30 @@ defmodule Util do
   end
 
   def ingresar(mensaje, :entero) do
-     try do
-       mensaje
-       |> ingresar(:texto)
-       |> String.to_integer()
-     rescue
-       ArgumentError ->
-         "Error, se espera que ingrese un número entero\n"
-         |> mostrar_error()
-         mensaje
-         |> ingresar(:entero)
-     end
-   end
+    try do
+      mensaje
+      |> ingresar(:texto)
+      |> String.to_integer()
+    rescue
+
+      ArgumentError ->
+        "Error, se espera que ingrese un número entero\n"
+        |> mostrar_error()
+        mensaje
+        |> ingresar(:entero)
+    end
+  end
+
+  def ingresar_entero_mayor_que(mensaje, valor_minimo) do
+    n = ingresar(mensaje, :entero)
+    cond do
+      n > valor_minimo ->
+        n
+      true ->
+        ingresar_entero_mayor_que(
+          "El valor no es mayor que #{valor_minimo}. Intente nuevamente:\n", valor_minimo)
+    end
+  end
 
   def ingresar(mensaje, :real) do
     try do
@@ -70,6 +82,15 @@ defmodule Util do
       end
   end
 
+  #caso especial de boolean para que compile cliente.ex. NO confundir con :booleano
+  def ingresar(mensaje, :boolean) do
+    valor =
+      mensaje
+      |> ingresar(:texto)
+      |> String.downcase()
+
+    Enum.member?(["sí", "si", "s"], valor)
+  end
   def mostrar_error(mensaje) do
     IO.puts(:standard_error, mensaje)
   end
