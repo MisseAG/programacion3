@@ -87,7 +87,7 @@ defmodule Matriz do
     []
   end
 
-  # s3: multiplicación
+  # s3: multiplicaciones
   def multiplicar(a, b) do
     a * b
   end

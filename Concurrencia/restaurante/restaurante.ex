@@ -1,15 +1,16 @@
+#Proceso Cocinero
 defmodule Cocinero do
   def iniciar do
-    spawn(fn -> esperar_pedidos() end)
+    spawn(fn -> esperar_pedidos() end) #crea nuevo proceso ligero que ejecuta esperar_pe
   end
 
   defp esperar_pedidos do
-    receive do
-      {:pedido, plato, cliente_pid} ->
+    receive do # proceso que espera recibir algo
+      {:pedido, plato, cliente_pid} -> #nombre del plato y quien pide
         IO.puts("[spawn] Cocinando: #{plato} (PID: #{inspect(self())})")
         Process.sleep(2000) # simular tiempo de cocinar
-        send(cliente_pid, {:listo, plato})
-        esperar_pedidos() # tras terminar, vuelve a esperar
+        send(cliente_pid, {:listo, plato}) #envía mensaje a cliente
+        esperar_pedidos() # tras terminar, vuelve a esperar recursión cola
     end
   end
 end
@@ -24,9 +25,9 @@ defmodule Restaurante do
     pid_cocinero = Cocinero.iniciar()
 
     Enum.each(@pedidos, fn plato ->
-      send(pid_cocinero, {:pedido, plato, self()})
+      send(pid_cocinero, {:pedido, plato, self()}) #self es cliente_pid
 
-      receive do
+      receive do # espera :listo del proceso cocinero
         {:listo, plato_listo} -> IO.puts("Listo: #{plato_listo}")
       end
     end)
@@ -36,38 +37,20 @@ defmodule Restaurante do
 
   def paralelo_spawn do
     IO.puts("\nPARALELO (spawn, un proceso por pedido):")
-    padre = self()
+    padre = self() #proceso restaurante con pid
 
     Enum.each(@pedidos, fn plato ->
       spawn(fn ->
         IO.puts("[spawn] Cocinando: #{plato} (PID: #{inspect(self())})")
         Process.sleep(2000)
-        send(padre, {:listo, plato})
+        send(padre, {:listo, plato}) #cocinero envía a proceso restaurante
       end)
     end)
 
     recoger(length(@pedidos))
   end
 
-  # Versión 3: PARALELO con Task.async
-
-  def paralelo_task do
-    IO.puts("\nPARALELO (Task.async):")
-
-    @pedidos
-    |> Enum.map(fn plato ->
-      Task.async(fn ->
-        IO.puts("[Task] Cocinando: #{plato} (PID: #{inspect(self())})")
-        Process.sleep(2000)
-        plato
-      end)
-    end)
-    |> Task.await_many(10_000)
-    |> Enum.each(fn plato ->
-      IO.puts("Listo: #{plato}")
-    end)
-  end
-
+  #recoger/1 para paralelo_spawn
   defp recoger(0), do: :ok
   defp recoger(n) do
     receive do
